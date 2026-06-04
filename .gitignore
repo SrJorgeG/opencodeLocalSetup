@@ -1,0 +1,29 @@
+# Dependencies & package managers
+node_modules/
+*.lock
+package-lock.json
+package.json
+bun.lock
+
+# Secrets & environment files
+.env
+.env.*
+*.secret
+*.key
+
+# Backups & temporary files
+*.bak
+*.tmp
+*.swp
+*~
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Internal opencode binaries/cache
+bin/
