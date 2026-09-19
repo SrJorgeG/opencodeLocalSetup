@@ -1,11 +1,12 @@
 ---
 name: agent-index
 description: >
-  Use the per-repo .agent-index/ (files.tsv, symbols.tsv, topics.md) before
-  grepping the tree or reading source files. Regenerates with `agent-index index`.
-  Use when exploring a codebase, finding a function by name, locating
+  Use the per-repo .agent-index/ (files.tsv, symbols.tsv, topics.md, vectors)
+  before grepping the tree or reading source files. Regenerates with
+  `agent-index index`. Search with `agent-index search "query"`. Use when
+  exploring a codebase, finding a function by name, locating
   authentication/CGI/RBAC files, or when the user mentions agent-index, code
-  index, or reading only a function range.
+  index, embeddings, or reading only a function range.
 ---
 
 # Agent index
@@ -14,12 +15,13 @@ If `.agent-index/meta.json` is missing or `agent-index status` prints `stale`/`m
 
 Then, in order:
 
-1. `rg -i <concept> .agent-index/topics.md` — which files matter.
-2. `rg '^<name>\t' .agent-index/symbols.tsv` — `path start end`.
-3. Read that path only from `start` to `end` (not the whole file).
-4. Full-file read is a last resort: index missing after a failed regenerate, or the range is clearly wrong.
+1. Natural language / concept → `agent-index search "<query>"` (vectors via FreeLLMAPI `bge-m3`; falls back to symbols.tsv).
+2. Known symbol name → `rg '^<name>\t' .agent-index/symbols.tsv`.
+3. Topic list → `rg -i <concept> .agent-index/topics.md`.
+4. Read that path only from `start` to `end` (not the whole file).
+5. Full-file read is a last resort: index missing after a failed regenerate, or the range is clearly wrong.
 
 Do not search `node_modules`, build dirs, or the whole repo for a symbol that is in `symbols.tsv`.
-Embeddings are later (v1.5) — ignore if absent.
+If `status` has no `family=`, grep only; embeddings need FreeLLMAPI on `:3001`.
 
-CLI: `agent-index index` / `agent-index status` (requires `~/.local/bin` on PATH).
+CLI: `agent-index index` / `status` / `search` (requires `~/.local/bin` on PATH).
